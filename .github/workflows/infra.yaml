@@ -1,4 +1,5 @@
 name: Terraform Infra
+
 on:
   push:
     branches: [main]
@@ -9,10 +10,11 @@ on:
     paths:
       - "terraform/**"
   workflow_dispatch:
+
 permissions:
   contents: read
 
-  jobs:
+jobs:
   terraform:
     name: Terraform Plan & Apply
     runs-on: ubuntu-latest
@@ -31,17 +33,17 @@ permissions:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-          - name: Setup Terraform
-  uses: hashicorp/setup-terraform@v3
-  with:
-    terraform_version: 1.14.8
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.14.8
 
       - name: Terraform Init
         run: terraform init
 
       - name: Terraform Plan
         run: terraform plan -no-color -input=false
-        
+
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-        run: terraform apply -auto-approve -input=false  
+        run: terraform apply -auto-approve -input=false
