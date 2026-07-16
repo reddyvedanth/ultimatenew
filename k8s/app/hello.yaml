@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: nginx:alpine
+          image: ghcr.io/reddyvedanth/ultimatenew/hello:latest
           ports:
             - containerPort: 80  
 
