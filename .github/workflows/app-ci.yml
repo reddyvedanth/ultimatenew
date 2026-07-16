@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
     paths:
+      - "app/**"
       - "k8s/app/**"
       - ".github/workflows/app-ci.yml"
   workflow_dispatch:
@@ -29,8 +30,8 @@ jobs:
       - name: Build and push image
         uses: docker/build-push-action@v6
         with:
-          context: ./k8s/app
-          file: ./k8s/app/Dockerfile
+          context: ./app
+          file: ./app/Dockerfile
           push: true
           tags: |
             ghcr.io/reddyvedanth/ultimatenew/hello:latest
