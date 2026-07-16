@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: ghcr.io/reddyvedanth/ultimatenew/hello:2c2e879120cb8066bfb8b42523bb4b44c7c96a31
+          image: ghcr.io/reddyvedanth/ultimatenew/hello:f1660e9f688c4dc943fb4078685a3dc7c6e04f39
           ports:
             - containerPort: 80  
 
