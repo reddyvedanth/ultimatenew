@@ -5,19 +5,21 @@ on:
     branches: [main]
     paths:
       - "terraform/**"
+      - ".github/workflows/infra.yaml"
   pull_request:
     branches: [main]
     paths:
       - "terraform/**"
+      - ".github/workflows/infra.yaml"
   workflow_dispatch:
 
 permissions:
-  id-token: write   # required for OIDC
+  id-token: write
   contents: read
 
 jobs:
-  terraform:
-    name: Terraform Plan & Apply
+  plan:
+    name: Terraform Plan
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -44,6 +46,33 @@ jobs:
       - name: Terraform Plan
         run: terraform plan -no-color -input=false
 
+  apply:
+    name: Terraform Apply
+    needs: plan
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    environment: production
+    defaults:
+      run:
+        working-directory: terraform
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::202264954476:role/github-actions-terraform
+          aws-region: us-east-1
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.14.8
+
+      - name: Terraform Init
+        run: terraform init
+
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         run: terraform apply -auto-approve -input=false
