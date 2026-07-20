@@ -17,6 +17,10 @@ permissions:
   id-token: write
   contents: read
 
+concurrency:
+  group: terraform-infra
+  cancel-in-progress: false
+
 jobs:
   plan:
     name: Terraform Plan
